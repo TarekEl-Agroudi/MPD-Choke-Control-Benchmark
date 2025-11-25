@@ -89,17 +89,21 @@ function generateBenchmarkReport(Results, scenarioNames, OP, selectedWell, selec
                 p_c_min = 0;
                 p_c_max = 3*OP.p_c0;
                 q_max = 1.5*(OP.q_p0 + OP.q_bl_nom);
-            case 2
+            case {2,6}
                 p_c_min = 0.8*OP.p_c0;
                 p_c_max = 1.2*OP.p_c0;
                 q_max = 1.5*(OP.q_p0 + OP.q_bl_nom);
-            case {3, 6}
+            case 3
                 p_c_min = 0.5*OP.p_c0;
                 p_c_max = 1.5*OP.p_c0;
                 q_max = 1.5*(OP.q_p0 + OP.q_bl_nom);
-            case {4, 5, 7}
+            case {4, 5}
                 p_c_min = 0;
-                p_c_max = 70;
+                p_c_max = OP.p_c0 + OP.friction + 10;
+                q_max = 1.5*(OP.q_p0 + OP.q_bl_nom);
+            case 7
+                p_c_min = OP.p_c0 + OP.friction - 2;
+                p_c_max = OP.p_c0 + OP.friction + 2;
                 q_max = 1.5*(OP.q_p0 + OP.q_bl_nom);
         end
 
@@ -107,8 +111,13 @@ function generateBenchmarkReport(Results, scenarioNames, OP, selectedWell, selec
         ax1 = axes('Position',[left_margin, bottom_margin + 3*(plot_height+plot_spacing), right_margin-left_margin, plot_height], ...
                    'Color', th.axes_bg, 'XColor', th.text_col, 'YColor', th.text_col, 'GridColor', th.axes_grid, 'GridAlpha',0.3);
         hold(ax1,'on'); grid(ax1,'on');
-        plotTimeseries(ax1, simOut.tout(), simOut.p_c.Data(:), linew_main, '-', th.lineColors(1,:));
-        plotTimeseries(ax1, simOut.tout, simOut.p_c_r.Data(:), linew_secondary, '--', th.lineColors(2,:));
+        if scenarioNum == 6 || scenarioNum == 7
+            plotTimeseries(ax1, simOut.tout, simOut.p_c_r.Data(:), linew_secondary, '--', th.lineColors(2,:));
+            plotTimeseries(ax1, simOut.tout(), simOut.p_c.Data(:), linew_main, '-', th.lineColors(1,:));
+        else
+            plotTimeseries(ax1, simOut.tout(), simOut.p_c.Data(:), linew_main, '-', th.lineColors(1,:));
+            plotTimeseries(ax1, simOut.tout, simOut.p_c_r.Data(:), linew_secondary, '--', th.lineColors(2,:));
+        end
         ylabel(ax1,'p_c [bar]'); legend(ax1,{'p_c','p_c_r'}, 'TextColor', th.text_col, 'Color', th.legend_bg); set(ax1,'FontSize',9);
         ylim(ax1, [p_c_min p_c_max]);
 

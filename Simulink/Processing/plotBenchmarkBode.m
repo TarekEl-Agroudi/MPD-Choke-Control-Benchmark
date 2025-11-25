@@ -23,6 +23,7 @@ function plotBenchmarkBode(KPI, th, reportFolder, reportPDF, scenarioNum)
     xlabel(ax1,'Frequency (Hz)','Color',th.text_col);
     ylabel(ax1,'Magnitude (dB)','Color',th.text_col);
     xlim(ax1, [0.005, 1]);
+    ylim(ax1, [-50, 50]);
     plot(ax1, xlim(ax1), [0 0], '--', 'Color', th.lineColors(1,:));
 
     title(ax1, 'Loop gain with stability margins','FontSize',10,'FontWeight','bold','Color', th.text_col);
@@ -51,6 +52,7 @@ function plotBenchmarkBode(KPI, th, reportFolder, reportPDF, scenarioNum)
     xlabel(ax2,'Frequency (Hz)','Color',th.text_col);
     ylabel(ax2,'Phase (deg)','Color',th.text_col);
     xlim(ax2, [0.005, 1]);
+    ylim(ax2, [-360, 10]);
     plot(ax2, xlim(ax1), [-180 -180], '--', 'Color', th.lineColors(2,:));
 
     % --- Mark crossovers & margins ---
