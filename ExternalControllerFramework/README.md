@@ -74,7 +74,7 @@ To ensure determinism, the simulator advances in discrete steps (Step size is 5 
 | `[2]` | $z_{uB}$ | Choke 2 position cmd | 0-1 | **Control Signal** |
 | `[3]` | $w_{uA}$ | Choke 1 velocity ref | 1/s | **Control Signal** |
 | `[4]` | $w_{uB}$ | Choke 2 velocity ref | 1/s | **Control Signal** |
-| `[5]` | $E_{ctrl}$ | Controller Mode | - | Pos (0) / Vel (1) |
+| `[5]` | $E_{ctrl}$ | Controller Mode | - | Vel (0) / Pos (1) |
 
 #### 2. Measurement Packet (Simulator -> Controller)
 **Size:** 12 Doubles (96 bytes)
