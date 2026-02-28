@@ -6,12 +6,6 @@ classdef KPI
             rmse = sqrt(mean(e.^2));
         end
         
-        function err = Trapped(signal, reference, tsim, t)
-            dtSim = mean(diff(tsim));
-            e = reference(:) - signal(:);
-            err = max(e(round(t/dtSim)), 0);
-        end
-        
         function maxErr = MaxSignedError(signal, reference)
             e = reference(:) - signal(:);
             [~, idx] = max(abs(e));
@@ -82,6 +76,25 @@ classdef KPI
             e = reference(:) - signal(:);
             ITAE = trapz(t, t(:) .* abs(e));
         end
+
+        %% Pressure trapping and Recovery KPIs
+        function err = Trapped(signal, reference, tsim, t)
+            dtSim = mean(diff(tsim));
+            e = reference(:) - signal(:);
+            err = max(e(round(t/dtSim)), 0);
+        end
+
+        function recov_os = RecoveryOvershoot(signal, reference, t, t_start)
+            idx = find(t >= t_start, 1);
+            if isempty(idx)
+                recov_os = NaN;
+                return;
+            end
+            sig_recovery = signal(idx:end);
+            ref_recovery = reference(idx:end);
+            e = sig_recovery(:) - ref_recovery(:);
+            recov_os = max(max(e), 0);
+        end
         
         %% Actuator usage KPIs
         function IAW = IAOmega(omega, t)
@@ -110,7 +123,7 @@ classdef KPI
             ISA = trapz(t, alpha.^2);
         end
 
-        %% Stability Margin KPI
+        %% Stability Margin KPIs
         function [GMdB, PM, wcg, wcp, TDM, S_max, resp, faxis] = StabilityMargins(signal, reference, t, t_start, t_end)
             idx = t >= t_start & t <= t_end;
             u = signal(idx) - reference(idx);

@@ -39,7 +39,6 @@ function KPI_results = computeKPI(simOut, scenario, OP)
             KPI_results.IAA = KPI.IAAccel(simOut.w_cA.Data,simOut.tout) + KPI.IAAccel(simOut.w_cB.Data,simOut.tout);
         case 5
             KPI_results.RMSE = KPI.RMSE(simOut.p_c.Data,simOut.p_c_r.Data);
-            KPI_results.MaxError = KPI.MaxSignedError(simOut.p_c.Data,simOut.p_c_r.Data);
             KPI_results.IAE = KPI.IAE(simOut.p_c.Data,simOut.p_c_r.Data,simOut.tout);
             KPI_results.ISE = KPI.ISE(simOut.p_c.Data,simOut.p_c_r.Data,simOut.tout);            
             KPI_results.IAW = KPI.IAOmega(simOut.w_cA.Data,simOut.tout) + KPI.IAOmega(simOut.w_cB.Data,simOut.tout);
@@ -47,6 +46,7 @@ function KPI_results = computeKPI(simOut, scenario, OP)
             
             T_trapped = waitTime+4*OP.t_ramp;
             KPI_results.Trapped = KPI.Trapped(simOut.p_c.Data,simOut.p_c_r.Data, simOut.tout, T_trapped);
+            KPI_results.RecovOS = KPI.RecoveryOvershoot(simOut.p_c.Data, simOut.p_c_r.Data, simOut.tout, T_trapped);
         case 6
             t_start = 100;
             t_end   = 1100;
