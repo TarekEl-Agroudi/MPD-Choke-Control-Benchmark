@@ -27,4 +27,4 @@ This project is divided into two distinct frameworks depending on your developme
 * **Requires:** Windows 10/11 for the simulator; Any language for the controller.
 
 ---
-**Contact:** Tarek El-Agroudi, tareke@stud.ntnu.no / tarek@kelda.no
+**Contact:** Tarek El-Agroudi, tareke@stud.ntnu.no
