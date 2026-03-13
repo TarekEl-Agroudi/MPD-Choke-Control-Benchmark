@@ -125,11 +125,11 @@ dtSim = 0.01;
 HarnessModel = 'BenchmarkTestHarness';
 switch TestWellMenu
     case 1
-        fmuPath = fullfile(scriptDir, 'fmu', 'BM01_Land.fmu');
+        fmuPath = fullfile(scriptDir, 'fmu', 'BM01.fmu');
     case 2
-        fmuPath = fullfile(scriptDir, 'fmu', 'BM02_DeepwaterMPD.fmu');
+        fmuPath = fullfile(scriptDir, 'fmu', 'BM02.fmu');
     case 3
-        fmuPath = fullfile(scriptDir, 'fmu', 'BM03_DeepwaterCML.fmu');
+        fmuPath = fullfile(scriptDir, 'fmu', 'BM03.fmu');
 end
 destFMU = fullfile(scriptDir, 'fmu', 'SelectedFMU.fmu');
 copyfile(fmuPath, destFMU, 'f');
@@ -336,8 +336,7 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
             
             p_c_times = z_d_times;
             p_c_vals = OP.p_c0 + [0, 0, p_fric, p_fric];
-            p_c_vals = [p_c_vals(:); (OP.p_c0+p_fric)*ones(length(chirp.Data), 1)];
-            q
+            p_c_vals = [p_c_vals(:); (OP.p_c0+p_fric)*ones(length(chirp.Data), 1)];            
             U.q_p   = timeseries(q_p_vals, q_p_times);
             U.q_bl = timeseries(q_bl_vals, q_bl_times);
             U.p_c_r = timeseries(p_c_vals, p_c_times);
