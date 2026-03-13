@@ -124,16 +124,19 @@ classdef KPI
         end
 
         %% Stability Margin KPIs
-        function [GMdB, PM, wcg, wcp, TDM, S_max, resp, faxis] = StabilityMargins(signal, reference, t, t_start, t_end)
+        function [GMdB, PM, wcg, wcp, TDM, S_max, resp, faxis] = StabilityMargins(z_uA, z_d, t, t_start, t_end)
             idx = t >= t_start & t <= t_end;
-            u = signal(idx) - reference(idx);
-            y = signal(idx);
+            
+            z_uA_seg = z_uA(idx);
+            z_d_seg = z_d(idx);
             t_segment = t(idx);
+            
+            u = z_uA_seg + z_d_seg;
+            y = z_uA_seg;
         
             dtSim = mean(diff(t_segment));
             N = numel(t_segment);
-        
-            % Frequency axis in Hz
+
             faxis = (0:(N-1)) / N / dtSim;
             half = floor(N/2);
             faxis = faxis(1:half);
@@ -146,9 +149,8 @@ classdef KPI
             resp = calculate_response(u, y, N);
             resp = resp .* exp(-1i * pi); 
             
-            % Frequency range
             f_min = 0.01;
-            f_max = 1;
+            f_max = 1.4;
             idx_range = (faxis >= f_min) & (faxis <= f_max);
             
             % GM, PM

@@ -18,7 +18,7 @@ function [signal_ts, t_sim] = linearChirp(dt, initialValue, amp, t_settle, t_chi
     t = linspace(0, t_total, round(t_total * Fs))';
 
     % Frequency sweep
-    f_start = 0.05;
+    f_start = 0.005;
     f_end   = 1.5;
     f_t = f_start + (f_end - f_start) * ((t - t_settle) / t_chirp);
     f_t(t < t_settle) = 0;

@@ -23,7 +23,7 @@ function plotBenchmarkBode(KPI, th, reportFolder, reportPDF, scenarioNum)
     plot(ax1, faxis, 20*log10(abs(resp)), 'Color', th.lineColors(1,:), 'LineWidth', 1);
     % xlabel(ax1,'Frequency (Hz)','Color',th.text_col);
     ylabel(ax1,'Magnitude (dB)','Color',th.text_col);
-    xlim(ax1, [0.005, 1]);
+    xlim(ax1, [0.008, 1.2]);
     ylim(ax1, [-50, 50]);
     plot(ax1, xlim(ax1), [0 0], '--', 'Color', th.lineColors(1,:));
 
@@ -40,19 +40,19 @@ function plotBenchmarkBode(KPI, th, reportFolder, reportPDF, scenarioNum)
         [~, wcg_idx] = min(abs(faxis - wcg)); 
         phase_at_wcg = ph(wcg_idx);
         required_phase = -180 + PM;
-        shift = round((required_phase - phase_at_wcg) / 180) * 180;
+        shift = round((required_phase - phase_at_wcg) / 360) * 360;
         ph_shifted = ph + shift;
     else
         idx = (faxis >= 0.05 & faxis <= 0.1);
         meanBand = mean(ph(idx));
         n = round((-180-meanBand) / 180);
-        ph_shifted = ph - 180 * n;
+        ph_shifted = ph - 180 * (n) -180;
     end
 
     plot(ax2, faxis, ph_shifted, 'Color', th.lineColors(2,:), 'LineWidth', 1);
     xlabel(ax2,'Frequency (Hz)','Color',th.text_col);
     ylabel(ax2,'Phase (deg)','Color',th.text_col);
-    xlim(ax2, [0.005, 1]);
+    xlim(ax2, [0.008, 1.2]);
     ylim(ax2, [-360, 10]);
     plot(ax2, xlim(ax1), [-180 -180], '--', 'Color', th.lineColors(2,:));
 

@@ -212,10 +212,11 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
             U.q_p = timeseries(OP.q_p0*ones(size(times)), times);
             U.q_bl = timeseries(OP.q_bl_nom*ones(size(times)), times);
             U.p_c_r = timeseries(values, times);
+            U.z_d = timeseries(0);
             tEnd = times(end);
     
         case 2 %  Downlinking
-            stepDur = [20, 15, 20, 5, 10, 15, 20, 5, 10, 5, 10, 5, 10, 20, 20, 5, 10, 10, 5, 20, 45];
+            stepDur = [20, 15, 20, 5, 10, 15, 20, 5, 10, 5, 10, 5, 10, 20, 20, 5, 10, 10, 5, 20, 150];
             rampDur = 5;
             mults = [0.7500, 1, 0.7500, 1, 0.7500, 1, 0.7500, 1, 0.7500, 1, 0.7500, 1, 0.7500, 1, 0.7500, 1, 0.7500, 1, 0.7500, 1, 1];
             times = waitTime;
@@ -234,6 +235,7 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
             U.q_p = timeseries(qVals, times);
             U.q_bl = timeseries(OP.q_bl_nom*ones(size(times)), times);
             U.p_c_r = timeseries(OP.p_c0*ones(size(times)), times);
+            U.z_d = timeseries(0);
             tEnd = times(end);
     
         case 3 % Flow Ramps
@@ -242,13 +244,14 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
 
             t_ramp = OP.t_ramp;
             q_p_times = [0, waitTime];
-            rampTimes = waitTime + [0, t_ramp, 2*t_ramp, 2.1*t_ramp, 2.5*t_ramp, 3.4*t_ramp, 4.4*t_ramp];
+            rampTimes = waitTime + [0, t_ramp, 3*t_ramp, 3.1*t_ramp, 3.5*t_ramp, 4.4*t_ramp, 6*t_ramp];
             q_p_times = [q_p_times, rampTimes];
             q_p_vals = [OP.q_p0, OP.q_p0, OP.q_p0, 0, 0, OP.q_p0/10, OP.q_p0/10, OP.q_p0, OP.q_p0];
 
             U.q_p = timeseries(q_p_vals, q_p_times);
             U.q_bl = timeseries(q_bl_vals, q_bl_times);
             U.p_c_r = timeseries(OP.p_c0);
+            U.z_d = timeseries(0);
 
             tEnd = max([U.q_p.Time(end), U.q_bl.Time(end), U.p_c_r.Time(end)]);
 
@@ -261,7 +264,7 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
             q_bl_vals = [OP.q_bl_nom, OP.q_bl_con];
 
             q_p_times = [0, waitTime];
-            rampTimes = waitTime + [0, t_ramp, 2*t_ramp, 2.1*t_ramp, 2.5*t_ramp, 3.4*t_ramp, 4.4*t_ramp];
+            rampTimes = waitTime + [0, t_ramp, 3*t_ramp, 3.1*t_ramp, 3.5*t_ramp, 4.4*t_ramp, 6*t_ramp];
             q_p_times = [q_p_times, rampTimes];
             q_p_vals = [OP.q_p0, OP.q_p0, OP.q_p0, 0, 0, OP.q_p0/10, OP.q_p0/10, OP.q_p0, OP.q_p0];
             
@@ -271,6 +274,7 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
             U.q_p = timeseries(q_p_vals, q_p_times);
             U.q_bl = timeseries(q_bl_vals, q_bl_times);
             U.p_c_r = timeseries(p_c_vals, p_c_times);
+            U.z_d = timeseries(0);
             
             tEnd = max([U.q_p.Time(end), U.q_bl.Time(end), U.p_c_r.Time(end)]);
 
@@ -290,6 +294,7 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
             U.q_p = timeseries(q_p_vals, q_p_times);
             U.q_bl = timeseries(q_bl_vals, q_bl_times);
             U.p_c_r = timeseries(p_c_vals, p_c_times);
+            U.z_d = timeseries(0);
             
             tEnd = max([U.q_p.Time(end), U.q_bl.Time(end), U.p_c_r.Time(end)]);
     
@@ -298,7 +303,7 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
             q_wait = OP.q_p0*ones(size(times_wait));
             qb_wait = OP.q_bl_nom*ones(size(times_wait));
     
-            [p_c_r, t_sim] = linearChirp(dtSim, OP.p_c0, 0.1, 100, 1000);
+            [z_d, t_sim] = linearChirp(dtSim, 0, 0.005, 100, 1000);
             t_sim = t_sim + waitTime;
     
             times = [times_wait, t_sim];
@@ -307,7 +312,8 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
     
             U.q_p   = timeseries(qVals, times);
             U.q_bl  = timeseries(qblVals, times);
-            U.p_c_r = p_c_r;
+            U.p_c_r = timeseries(OP.p_c0*ones(size(times)), times);
+            U.z_d   = z_d;
     
             tEnd = times(end);
 
@@ -321,17 +327,24 @@ function [U, tEnd] = setupScenario(ScenarioMenu, dtSim, OP)
             q_p_times = [0, waitTime, waitTime+t_ramp, waitTime+2*t_ramp];
             q_p_vals = [OP.q_p0, OP.q_p0, 0, 0];
             
-            p_c_times = q_p_times;
-            p_c_vals = OP.p_c0 + [0, 0, p_fric, p_fric];
-            chirp = linearChirp(dtSim, OP.p_c0+p_fric, 0.1, 500, 1000);
-            p_c_vals = [p_c_vals(:); chirp.Data(:)];
-            p_c_times = [p_c_times(:); p_c_times(end) + chirp.Time];
+            z_d_times = q_p_times;
+            z_d_vals = [0, 0, 0, 0];
+            chirp = linearChirp(dtSim, 0, 0.0005, 500, 1000);
+            z_d_vals = [z_d_vals(:); chirp.Data(:)];
+            z_d_times = [z_d_times(:); z_d_times(end) + chirp.Time];
+
             
+            p_c_times = z_d_times;
+            p_c_vals = OP.p_c0 + [0, 0, p_fric, p_fric];
+            p_c_vals = [p_c_vals(:); (OP.p_c0+p_fric)*ones(length(chirp.Data), 1)];
+            q
             U.q_p   = timeseries(q_p_vals, q_p_times);
             U.q_bl = timeseries(q_bl_vals, q_bl_times);
             U.p_c_r = timeseries(p_c_vals, p_c_times);
+            U.z_d = timeseries(z_d_vals, z_d_times);
 
-            tEnd = max([U.q_p.Time(end), U.q_bl.Time(end), U.p_c_r.Time(end)]);   
+            tEnd = max([U.q_p.Time(end), U.q_bl.Time(end), U.z_d.Time(end)]);
+  
     end
     assignAllVariables()
 end
