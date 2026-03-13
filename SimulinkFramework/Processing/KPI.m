@@ -84,15 +84,14 @@ classdef KPI
             err = max(e(round(t/dtSim)), 0);
         end
 
-        function recov_os = RecoveryOvershoot(signal, reference, t, t_start)
+        function recov_os = RecoveryOvershoot(signal, p_connection, t, t_start)
             idx = find(t >= t_start, 1);
             if isempty(idx)
                 recov_os = NaN;
                 return;
             end
             sig_recovery = signal(idx:end);
-            ref_recovery = reference(idx:end);
-            e = sig_recovery(:) - ref_recovery(:);
+            e = sig_recovery(:) - p_connection;
             recov_os = max(max(e), 0);
         end
         
