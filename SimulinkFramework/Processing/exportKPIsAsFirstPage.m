@@ -22,7 +22,7 @@ function exportKPIsAsFirstPage(Results, baseline, kpi_map, scenarioNames, select
     text(0.05, y, sprintf('Controller: %s', strrep(controllerName, '_', '\_')),'FontSize',11,'Color',th.lineColors(1,:),'Parent',ax,'Units','normalized'); 
     y = y - lineSpacing;
     
-    text(0.05, y, sprintf('Baseline: Gain-scheduled I-P Controller'),'FontSize',11,'Color',th.lineColors(2,:),'Parent',ax,'Units','normalized'); 
+    text(0.05, y, sprintf('Baseline: Gain-scheduled PI Controller'),'FontSize',11,'Color',th.lineColors(2,:),'Parent',ax,'Units','normalized'); 
     y = y - lineSpacing;
     
     text(0.05, y, sprintf('Test well: %s', strrep(selectedWell, '_', '\_')),'FontSize',11,'Color',th.text_col,'Parent',ax,'Units','normalized'); 
